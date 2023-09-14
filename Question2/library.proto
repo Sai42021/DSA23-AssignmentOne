@@ -1,0 +1,44 @@
+syntax = "proto3";
+package LibraryManagement;
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+service libraryManagement{
+    rpc add_book(Book) returns (Responds);
+    rpc create_users(User) returns (Responds);
+
+    rpc update_book(Book) returns (Responds);
+    rpc update_user(User) returns (Responds);
+
+    rpc remove_user(google.protobuf.StringValue) returns (Responds); 
+    rpc remove_book(google.protobuf.StringValue) returns (Responds);
+
+    rpc list_all_users(google.protobuf.Empty) returns (stream User);
+    // rpc List_avaialable_books(google.protobuf.Empty) returns (stream Book);
+
+    rpc locate_book(google.protobuf.StringValue) returns (Book);
+    rpc borrow_book(Book) returns (Responds);
+}
+
+message Book{
+    string ISBN = 1;
+    string title = 2;
+    string author_1 = 3;
+    string author_2 = 4;
+    string location = 5;
+    string status = 6;
+}
+
+message User{
+    string userID = 1;
+    string firstName = 2;
+    string lastName = 3;
+}
+
+message Responds{
+    string message = 1;
+}
+
+message BookISBN{
+    string ISBN = 1;
+}
