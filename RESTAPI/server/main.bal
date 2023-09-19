@@ -17,7 +17,7 @@ type Course record {
 
 table<Lecturer> key(staffNum) lecturers = table [];
 
-service /course on new http:Listener(4000) {
+service /lecturers on new http:Listener(4000) {
     resource function post addLecturer(Lecturer lecturer) returns string {
         io:println(lecturer);
         error? err = lecturers.add(lecturer);
