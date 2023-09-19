@@ -1,0 +1,155 @@
+openapi: '3.0.2'
+info:
+  title: Lecturer API
+  version: 1.0.0
+  description: API for managing lecturers with their courses
+
+servers:
+  - url: http://localhost:4000
+
+paths:
+  /lecturers:
+    post:
+      summary: Add a new lecturer
+      operationId: addLecturer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecturer'
+      responses:
+        '200':
+          description: Lecturer added successfully
+        '400':
+          description: Bad request
+
+    put:
+      summary: Update lecturer details
+      operationId: updateLecturerDetails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecturer'
+      responses:
+        '200':
+          description: Lecturer updated successfully
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all lecturers
+      operationId: getAllLecturers
+      responses:
+        '200':
+          description: List of lecturers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+
+  /lecturers/{staffNum}:
+    get:
+      summary: Get lecturer by staff number
+      operationId: getLecturerByNumber
+      parameters:
+        - name: staffNum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lecturer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecturer'
+        '404':
+          description: Lecturer not found
+
+    delete:
+      summary: Delete lecturer by staff number
+      operationId: deleteLectuerByNumber
+      parameters:
+        - name: staffNum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lecturer deleted successfully
+        '404':
+          description: Lecturer not found
+
+  /lecturers/teaching/{courseCode}:
+    get:
+      summary: Get lecturers teaching with same course
+      operationId: getLecturersTeachingCourse
+      parameters:
+        - name: courseCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of lecturers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+
+  /lecturers/office/{officeNumber}:
+    get:
+      summary: Get lecturers in the same office
+      operationId: getLecturersInOffice
+      parameters:
+        - name: officeNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of lecturers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+
+components:
+  schemas:
+    Lecturer:
+      type: object
+      properties:
+        staffNum:
+          type: string
+        staffName:
+          type: string
+        title:
+          type: string
+        course:
+          $ref: '#/components/schemas/Course'
+        officeNumber:
+          type: string
+
+    Course:
+      type: object
+      properties:
+        courseCode:
+          type: string
+        courseName:
+          type: string
+        nqfLevel:
+          type: integer
+

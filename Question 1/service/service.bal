@@ -12,13 +12,13 @@ type Lecturer record {
 type Course record {
     readonly string courseCode;
     string courseName;
-    int nqfLevel;
+    string nqfLevel;
 };
 
 table<Lecturer> key(staffNum) lecturers = table [];
 
 service /lecturers on new http:Listener(4000) {
-    resource function post addLecturer(Lecturer lecturer) returns string {
+    resource function post addLecturer(@http:Payload Lecturer lecturer) returns string {
         io:println(lecturer);
         error? err = lecturers.add(lecturer);
         if (err is error) {
@@ -27,7 +27,7 @@ service /lecturers on new http:Listener(4000) {
         return string `${lecturer.staffNum} saved successfully`;
     }
 
-    resource function put updateLecturerDetails(Lecturer lecturer) returns string {
+    resource function put updateLecturerDetails(@http:Payload Lecturer lecturer) returns string {
         io:println(lecturer);
         error? err = lecturers.put(lecturer);
         if (err is error) {
@@ -39,7 +39,6 @@ service /lecturers on new http:Listener(4000) {
         return lecturers;
     }
 
-    
     resource function get getLecturerByNumber(string staffNum) returns Lecturer|string {
         foreach Lecturer lecturer in lecturers {
             if (lecturer.staffNum === staffNum) {
