@@ -1,18 +1,23 @@
 import ballerina/http;
 import ballerina/io;
 
-type Lecturer readonly & record {
-    string stuffNum;
-    string stuffName;
+type Lecturer record {
+    readonly string staffNum;
+    string staffName;
     string title;
-    string[] course;
+    Course course;
+    string officeNumber;
 };
 
+type Course record {
+    readonly string courseCode;
+    string courseName;
+    int nqfLevel;
+};
 
-type stuffNum string;
+type staffNum string;
 
-table<Lecturer> key(stuffNum) lecturers = table [];
-
+table<Lecturer> key(staffNum) lecturers = table [];
 
 service /course on new http:Listener(4000) {
     resource function post addLecturer(Lecturer lecturer) returns string {
@@ -21,7 +26,7 @@ service /course on new http:Listener(4000) {
         if (err is error) {
             return string `Error, ${err.message()}`;
         }
-        return string `${lecturer.stuffNum} saved successfully`;
+        return string `${lecturer.staffNum} saved successfully`;
     }
 
     resource function put updateLecturerDetails(Lecturer lecturer) returns string {
@@ -30,36 +35,52 @@ service /course on new http:Listener(4000) {
         if (err is error) {
             return string `Error, ${err.message()}`;
         }
-        return string `${lecturer.stuffNum} saved successfully`;
+        return string `${lecturer.staffNum} saved successfully`;
     }
-    resource function get getAllLecturers() returns table<Lecturer> key(stuffNum) {
+    resource function get getAllLecturers() returns table<Lecturer> key(staffNum) {
         return lecturers;
     }
 
     
-    resource function get getLecturerByNumber(string stuffNum) returns Lecturer|string {
+    resource function get getLecturerByNumber(string staffNum) returns Lecturer|string {
         foreach Lecturer lecturer in lecturers {
-            if (lecturer.stuffNum === stuffNum) {
+            if (lecturer.staffNum === staffNum) {
                 return lecturer;
             }
         }
-        return stuffNum + " is invalid";
+        return staffNum + " is invalid";
     }
 
-    resource function delete deleteLectuerByNumber/[string stuffNum]() returns string {
+    resource function delete deleteLectuerByNumber/[string staffNum]() returns string {
         table<Lecturer> lecturer1 = table [];
         foreach Lecturer lecturer in lecturers {
-            if (lecturer.stuffNum !== stuffNum) {
+            if (lecturer.staffNum !== staffNum) {
                 lecturer1.add(lecturer);
             }
         }
-        lecturers = <table<Lecturer> key(stuffNum)>lecturer1;
+        lecturers = <table<Lecturer> key(staffNum)>lecturer1;
         if (lecturers.length() === lecturer1.length()) {
-            return stuffNum + " not found.";
+            return staffNum + " not found.";
         }
-        return stuffNum + " successfuly deleted";
+        return staffNum + " successfuly deleted";
     }
 
-// Retrieve all the lecturers that teach a certain course.
-// Retrieve all the lecturers that sit in the same office. 
+    resource function get getLecturersTeachingCourse(string courseCode) returns table<Lecturer> {
+        table<Lecturer> lecturersTeachingCourse = table [];
+        foreach Lecturer lecturer in lecturers {
+            if (lecturer.course.courseCode == courseCode) {
+                lecturersTeachingCourse.add(lecturer);
+            }
+        }
+        return lecturersTeachingCourse;
+    }
+    resource function get getLecturersInOffice(string officeNumber) returns table<Lecturer> {
+        table<Lecturer> lecturersInOffice = table [];
+        foreach Lecturer lecturer in lecturers {
+            if (lecturer.officeNumber == officeNumber) {
+                lecturersInOffice.add(lecturer);
+            }
+        }
+        return lecturersInOffice;
+    }
 }
