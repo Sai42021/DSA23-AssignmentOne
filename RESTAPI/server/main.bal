@@ -15,8 +15,6 @@ type Course record {
     int nqfLevel;
 };
 
-type staffNum string;
-
 table<Lecturer> key(staffNum) lecturers = table [];
 
 service /course on new http:Listener(4000) {
