@@ -48,7 +48,7 @@ service /lecturers on new http:Listener(4000) {
         return staffNum + " is invalid";
     }
 
-    resource function delete deleteLectuerByNumber/[string staffNum]() returns string {
+    resource function delete deleteLectuerByNumber(string staffNum) returns string {
         table<Lecturer> lecturer1 = table [];
         foreach Lecturer lecturer in lecturers {
             if (lecturer.staffNum !== staffNum) {
