@@ -36,6 +36,11 @@ public function main() returns error? {
             lecturer.officeNumber = io:readln("Enter Office Number: ");
             string courseCode = io:readln("Enter Course Code: ");
             lecturer.course = { courseCode };
+            string courseName = io:readln("Enter Course Name: ");
+            lecturer.course = { courseName };
+            string ans = io:readln("Enter National Qualifications Framework level: ");
+            int? nqfLevel = check int:fromString(ans);
+            lecturer.course = { nqfLevel };
             check addLecturer(lecturerClient, lecturer);
         }
         "2" => {
