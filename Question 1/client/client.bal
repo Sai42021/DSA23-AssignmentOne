@@ -12,11 +12,11 @@ public type Lecturer record {
 public type Course record {
     string courseCode?;
     string courseName?;
-    int nqfLevel?;
+    string nqfLevel?;
 };
 
 public function main() returns error? {
-    http:Client lecturerClient = check new ("http://localhost:4000/lecturers");
+    http:Client lecturerClient = check new ("localhost:4000/lecturers");
 
     io:println("1. Add Lecturer");
     io:println("2. Update Lecturer");
@@ -34,13 +34,11 @@ public function main() returns error? {
             lecturer.staffName = io:readln("Enter Staff Name: ");
             lecturer.title = io:readln("Enter Title: ");
             lecturer.officeNumber = io:readln("Enter Office Number: ");
-            string courseCode = io:readln("Enter Course Code: ");
-            lecturer.course = { courseCode };
-            string courseName = io:readln("Enter Course Name: ");
-            lecturer.course = { courseName };
-            string ans = io:readln("Enter National Qualifications Framework level: ");
-            int? nqfLevel = check int:fromString(ans);
-            lecturer.course = { nqfLevel };
+            lecturer.course = {
+                courseCode: io:readln("Enter Course Code: "),
+                courseName: io:readln("Enter Course Name: "),
+                nqfLevel: io:readln("Enter National Qualifications Framework level: ")
+            };
             check addLecturer(lecturerClient, lecturer);
         }
         "2" => {
@@ -49,8 +47,11 @@ public function main() returns error? {
             lecturer.staffName = io:readln("Enter Staff Name: ");
             lecturer.title = io:readln("Enter Title: ");
             lecturer.officeNumber = io:readln("Enter Office Number: ");
-            string courseCode = io:readln("Enter Course Code: ");
-            lecturer.course = { courseCode };
+            lecturer.course = {
+                courseCode: io:readln("Enter Course Code: "),
+                courseName: io:readln("Enter Course Name: "),
+                nqfLevel: io:readln("Enter National Qualifications Framework level: ")
+            };
             check updateLecturer(lecturerClient, lecturer);
         }
         "3" => {

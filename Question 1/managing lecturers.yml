@@ -150,5 +150,5 @@ components:
         courseName:
           type: string
         nqfLevel:
-          type: integer
+          type: string
 
